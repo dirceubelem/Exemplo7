@@ -26,16 +26,23 @@ public class MainActivity extends ActionBarActivity {
 
                     SharedPreferencesHelper.write(MainActivity.this, "database", "created", true);
 
+                    mostrandoQuantidadeEstados();
+
                 }
             });
 
+        } else {
+            mostrandoQuantidadeEstados();
         }
 
+
+    }
+
+    public void mostrandoQuantidadeEstados() {
         DAOEstado d = new DAOEstado(this);
         int q = d.quantidade();
         d.close();
 
         Toast.makeText(this, "Quantidade de estados: " + q, Toast.LENGTH_LONG).show();
-
     }
 }
