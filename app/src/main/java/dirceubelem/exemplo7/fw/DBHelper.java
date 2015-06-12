@@ -4,7 +4,6 @@ package dirceubelem.exemplo7.fw;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 
@@ -83,25 +82,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
     }
 
-    private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-
-        try {
-            checkDB = SQLiteDatabase.openDatabase(
-                    Constant.Database.ABSOLUTE_DATABASE_PATH, null,
-                    SQLiteDatabase.OPEN_READONLY
-                            | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }
-
-        if (checkDB != null) {
-            checkDB.close();
-        }
-
-        return checkDB != null ? true : false;
-    }
-
     private void copyDataBase() throws IOException {
         InputStream in = context.getAssets().open(
                 Constant.Database.ASSETS_DATABASE_PATH + "/"
@@ -124,16 +104,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private void createDataBase() throws IOException {
-        //if (!checkDataBase()) {
-            SQLiteDatabase checkDB = getReadableDatabase();
-            checkDB.close();
+        SQLiteDatabase checkDB = getReadableDatabase();
+        checkDB.close();
 
-            try {
-                copyDataBase();
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
-        //}
+        try {
+            copyDataBase();
+        } catch (IOException e) {
+            throw new Error("Error copying database");
+        }
     }
 
     public interface OnCreateDataBaseListener {
